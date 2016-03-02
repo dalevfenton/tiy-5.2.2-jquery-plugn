@@ -22,17 +22,17 @@ var context = [{link: 'http://google.com', title: 'Google'},
                 {link: 'http://google.com', title: 'Google'}];
 $('.container ul').html(template({items:context}));
 
-var selector = "#template";
-var headerContext = { title: "Gallery", description: 'view a list of websites'};
+var selector = "#template-will-be-overridden";
+var headerContext = { context: { title: "Gallery", description: 'view a list of websites' } };
 //note that if the same property is passed in multiple objects the one passed in
 //last is the one that will ultimately be used
 //(this seems counterintuitive and it may be better to reverse that behavior )
-var config = { selector: selector, context: { title:'Overwritten' }};
-var config2 = { context: headerContext };
+var config = { selector: selector, context: { title:'Finished Gallery' } };
+var config2 = headerContext;
 
 //we really only need to pass a selector and context object but allow for the
 //potential need to pass multiple objects to fill those two params
-$("#header").template(config, config2);
+$("#header").template(config, config2, { selector: "#template" });
 
 },{"./plugin.js":2,"./template.handlebars":3,"handlebars":34,"jquery":47,"underscore":50}],2:[function(require,module,exports){
 "use strict";
@@ -47,21 +47,19 @@ $("#header").template(config, config2);
 //accepts multiple Objects that will be merged, will fail if any argument is not
 //an object
 (function($){
-  $.fn.template = function(config){
+  $.fn.template = function(){
     //this allows someone to pass us multiple objects if we need to merge more
     //than one to build the proper context, duplicate properties will be overwritten
     //such that the last object passed in will set any value (see jQuery extend() docs)
-    config = _.reduce(arguments, function(memo, item){
-      //throw error if we aren't passed an object to alert the user
+    var config = Array.prototype.reduce.call(arguments, function(memo, item){
       if (typeof item !== 'object') {
         throw new TypeError('$.template() requires objects as arguments');
       }
-
-      return $.extend(memo, item);
+      return $.extend(true, memo, item);
     });
 
     //set options as default or as passed by config object
-    var options = $.extend({ selector: "#template", context: {}}, config);
+    var options = $.extend({ selector: "#template-default", context: {}}, config);
 
     //return processed object for chaining after setting template into html
     return this.html(Handlebars.compile($(options.selector).html())( options.context ));

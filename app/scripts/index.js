@@ -20,14 +20,14 @@ var context = [{link: 'http://google.com', title: 'Google'},
                 {link: 'http://google.com', title: 'Google'}];
 $('.container ul').html(template({items:context}));
 
-var selector = "#template";
-var headerContext = { title: "Gallery", description: 'view a list of websites'};
+var selector = "#template-will-be-overridden";
+var headerContext = { context: { title: "Gallery", description: 'view a list of websites' } };
 //note that if the same property is passed in multiple objects the one passed in
 //last is the one that will ultimately be used
 //(this seems counterintuitive and it may be better to reverse that behavior )
-var config = { selector: selector, context: { title:'Overwritten' }};
-var config2 = { context: headerContext };
+var config = { selector: selector, context: { title:'Finished Gallery' } };
+var config2 = headerContext;
 
 //we really only need to pass a selector and context object but allow for the
 //potential need to pass multiple objects to fill those two params
-$("#header").template(config, config2);
+$("#header").template(config, config2, { selector: "#template" });
