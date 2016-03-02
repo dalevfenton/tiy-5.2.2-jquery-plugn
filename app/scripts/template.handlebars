@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+{{#each items}}
+<a class="item-block" href="{{link}}"><li class="template-item item-{{@index}}">
+  <img src="http://unsplash.it/g/200/200">
+  <div class="item-overlay"></div>
+  <span class="item-title">{{title}}</span>
+  <span class="item-desc">Listing #{{@index}}</span>
+</li></a>
+{{/each}}
